@@ -379,7 +379,12 @@ def main(pretrained_model_name_or_path="wangqixun/YamerMIX_v8", enable_lcm_arg=F
                     f"Cannot find any face in the reference image! Please upload another person image"
                 )
 
-            face_info = face_info[-1]
+            face_info = sorted(
+                face_info,
+                key=lambda x: (x["bbox"][2] - x["bbox"][0]) * x["bbox"][3] - x["bbox"][1],
+            )[
+                -1
+            ]  # only use the maximum face
             face_kps = draw_kps(pose_image, face_info["kps"])
 
             width, height = face_kps.size
